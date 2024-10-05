@@ -46,7 +46,6 @@ test("it calls onUserAdd with the form data", () => {
 
   User.click(emailInput);
   User.keyboard("x7uJ6@example.com");
-  4;
 
   const button = screen.getByRole("button");
 

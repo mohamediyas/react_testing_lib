@@ -228,3 +228,120 @@ expect(signoutBtn).toBeInTheDocument();
 });
 
 #####
+
+### info about query
+
+import { render, screen } from '@testing-library/react';
+
+function ColorList() {
+return (
+
+<ul>
+{' '}
+----'list'
+<li>Red</li> ----'listitem'
+<li>Blue</li> ----'listitem'
+<li>Green</li> ----'listitem'
+</ul>
+);
+}
+
+render(<ColorList />);
+
+test('getBy,queryBy,findBy finding 0 elements', async () => {
+render(<ColorList />);
+
+// screen.getByRole("textbox")
+
+expect(() => screen.getByRole('textbox')).toThrow();
+
+expect(screen.queryByRole('textbox')).toEqual(null);
+
+let errorThrow = false;
+try {
+await screen.findByRole('textbox');
+} catch (err) {
+errorThrow = true;
+}
+
+expect(errorThrow).toEqual(true);
+});
+
+test('getby, findby,queryby when they find 1 element', async () => {
+render(<ColorList />);
+
+expect(screen.getByRole('list')).toBeInTheDocument();
+
+expect(screen.queryByRole('list')).toBeInTheDocument();
+
+expect(await screen.findByRole('list')).toBeInTheDocument();
+});
+
+test('getBy, querBy, findBy when finding > 1 elements', async () => {
+render(<ColorList />);
+
+expect(() => screen.getByRole('listitem')).toThrow();
+
+expect(()=>screen.queryByRole('listitem')).toThrow();
+
+let errorThrow = false;
+try {
+await screen.findByRole('listitem');
+} catch (err) {
+errorThrow = true;
+}
+
+expect(errorThrow).toEqual(true);
+});
+
+test('getAllBy , QueryAllBy, findAllBy', async () => {
+render(<ColorList />);
+
+expect(screen.getAllByRole('listitem')).toHaveLength(3);
+
+expect(screen.queryAllByRole('listitem')).toHaveLength(3);
+
+expect(await screen.findAllByRole('listitem')).toHaveLength(3);
+});
+
+test("favor using getBy to prove an element exist", ()=>{
+render(<ColorList/>)
+
+    const element  = screen.getByRole("list");
+
+    expect(element).toBeInTheDocument();
+
+})
+
+test('favor queryBy when proving an element does not exist', () => {
+render(<ColorList />);
+
+const element = screen.queryByRole('textbox');
+4;
+
+expect(element).not.toBeInTheDocument();
+});
+
+import { useState, useEffect } from 'react';
+
+function fakeFetchColors() {
+return Promise.resolve(['red', 'green', 'blue']);
+}
+
+function LoadableColorList() {
+const [colors, setColors] = useState([]);
+
+useEffect(() => {
+fakeFetchColors().then((c) => setColors(c));
+}, []);
+
+const renderedColors = colors.map((color) => {
+return <li key={color}>{color}</li>;
+});
+
+return <ul>{renderedColors}</ul>;
+}
+
+render(<LoadableColorList />);
+
+#####
