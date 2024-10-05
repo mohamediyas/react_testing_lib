@@ -68,3 +68,163 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+npx rtl-book serve .\roles-notes.js
+
+Attached to this lecture is the completed version of the roles notebook. It contains all the same code shown in the videos, but I have added in a number of comments.
+
+To run this notebook, download the attached zip file and extract it. At your terminal, navigate to the directory you extracted the notebook to. Finally, run the command 'npx rtl-book serve roles-notes.js'
+
+#####
+
+import { render, screen } from '@testing-library/react';
+
+function RoleExample() {
+return (
+
+<div>
+<a href="/">Link</a>
+<button>Button</button>
+<footer>Content Info</footer>
+<h1>Heading</h1>
+<header>Banner</header>
+<img alt="description" /> Img
+<input type="checkbox" /> checkbox
+<input type="number" /> spin Button
+<input type="radio" /> Radio
+<input type="text" /> Textbox
+<li>List Item</li>
+<ul>List Group</ul>
+</div>
+);
+}
+
+render(<RoleExample />);
+
+####
+
+test('can find element by role', () => {
+render(<RoleExample />);
+
+const roles = [
+'link',
+'button',
+'contentinfo',
+'heading',
+'banner',
+'img',
+'checkbox',
+'spinbutton',
+'radio',
+'textbox',
+'listitem',
+'list',
+];
+
+for (let role of roles) {
+const el = screen.getByRole(role);
+expect(el).toBeInTheDocument();
+}
+});
+
+####
+
+function AccessibleName() {
+return (
+
+<div>
+
+      <button>Submit</button>
+      <button>Cancel</button>
+    </div>
+
+);
+}
+
+render(<AccessibleName/>)
+
+###
+
+test('can select by accessible name', () => {
+render(<AccessibleName />);
+
+const submitButton = screen.getByRole('button', {
+name: /Submit/i,
+});
+
+const cancelButton = screen.getByRole('button', {
+name: /cancel/i,
+});
+
+expect(submitButton).toBeInTheDocument();
+expect(cancelButton).toBeInTheDocument();
+});
+
+###
+
+function MoreNames() {
+return (
+<>
+<label htmlFor="email">Email</label>
+<input id="email" />
+<label htmlFor="search">Search</label>
+<input id="search" />
+</>
+);
+}
+
+render(<MoreNames />);
+
+###
+
+test('make sure two input render', () => {
+render(<MoreNames />);
+
+const emailInput = screen.getByRole('textbox', {
+name: /email/i,
+});
+
+const searchInput = screen.getByRole('textbox', {
+name: /search/i,
+});
+
+expect(emailInput).toBeInTheDocument();
+expect(searchInput).toBeInTheDocument();
+});
+
+###
+
+function IconButton() {
+return (
+
+<div>
+<button aria-label="sign in">
+<svg />
+</button>
+<button aria-label='sign out'>
+<svg />
+</button>
+</div>
+);
+}
+
+render(<IconButton />);
+
+####
+
+test('find element based on label', () => {
+render(<IconButton />);
+
+const signinBtn = screen.getByRole('button', {
+name: /sign in/i,
+});
+const signoutBtn = screen.getByRole('button', {
+name: /sign out/i,
+});
+
+expect(signinBtn).toBeInTheDocument();
+
+expect(signoutBtn).toBeInTheDocument();
+});
+
+#####
